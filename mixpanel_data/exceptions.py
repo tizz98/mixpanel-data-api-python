@@ -20,3 +20,7 @@ class MixpanelSecretMissing(MixpanelError):
 
 class MixpanelHTTPError(MixpanelError):
     pass
+
+
+class MixpanelDataError(MixpanelError):
+    pass
