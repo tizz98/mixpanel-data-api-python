@@ -35,7 +35,7 @@ class Request(urllib.request.Request):
     RESPONSE_FORMAT = 'json'
 
     def __init__(self, endpoint, subdomain=None, version=None, secure=True,
-                 json_decoder=None, **params):
+                 json_decoder=None, lifetime_exp=3600, **params):
         self.endpoint = endpoint
         self.subdomain = subdomain
 
@@ -50,18 +50,21 @@ class Request(urllib.request.Request):
             self.json_decoder = json.loads
 
         params['api_key'] = self.api_key
-        params['expire'] = int(time.time()) + 600  # 10 minutes
+        params['expire'] = int(time.time()) + lifetime_exp
         params['format'] = self.RESPONSE_FORMAT
 
         if 'sig' in params:
             del params['sig']
         params['sig'] = self.hash_args(params)
 
-        self.url = '{base_url}/{endpoint}/?{params}'.format(
+        url = '{base_url}/{endpoint}/?{params}'.format(
             base_url=self.base_url,
             endpoint=self.endpoint,
             params=self.unicode_urlencode(params),
         )
+        urllib.request.Request.__init__(self, url)
+
+        self.lifetime = lifetime_exp
 
     @property
     def api_key(self):
