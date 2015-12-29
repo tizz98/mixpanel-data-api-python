@@ -48,6 +48,8 @@ class Request(urllib.request.Request):
 
         if json_decoder is None:
             self.json_decoder = json.loads
+        else:
+            self.json_decoder = json_decoder
 
         params['api_key'] = self.api_key
         params['expire'] = int(time.time()) + lifetime_exp

@@ -30,6 +30,7 @@ def jsonl_decoder(s):
     lines = s.split("\n")
 
     for line in lines:
-        data.append(json.loads(line.rstrip('\r')))
+        if line != '':
+            data.append(json.loads(line.rstrip('\r')))
 
     return data
