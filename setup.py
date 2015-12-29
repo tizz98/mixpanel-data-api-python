@@ -22,7 +22,7 @@ setup(
     download_url='https://github.com/tizz98/mixpanel-data-api-python/'
                  'tarball/%s' % __version__,
     author='Elijah Wilson',
-    license='GNU General Public License v3.0',
+    license='MIT License',
     packages=['mixpanel_data'],
     keywords="mixpanel data export api",
     zip_safe=True,
@@ -30,7 +30,7 @@ setup(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Libraries',
-        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
