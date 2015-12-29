@@ -1,3 +1,4 @@
+import re
 from collections import namedtuple
 
 import six
@@ -37,9 +38,11 @@ class Export(object):
     def _set_list_data(obj, data_list, key):
         for data_item in data_list:
             if isinstance(data_item, dict):
-                setattr(obj, key, Export.dict_handler(data_item))
+                data_item = Export.list_handler(data_item)
             elif isinstance(data_item, list):
-                setattr(obj, key, Export.list_handler(data_item))
+                data_item = Export.list_handler(data_item)
+
+            setattr(obj, Export.clean_key(key), data_item)
 
     @staticmethod
     def dict_handler(data_dict, key=''):
@@ -52,7 +55,7 @@ class Export(object):
             elif isinstance(v, dict):
                 v = Export.dict_handler(v)
 
-            setattr(ret_obj, k, v)
+            setattr(ret_obj, Export.clean_key(k), v)
 
         return ret_obj
 
@@ -69,6 +72,10 @@ class Export(object):
             return_data.append(data_item)
 
         return return_data
+
+    @staticmethod
+    def clean_key(key):
+        return re.sub(r'\W|^(?=\d)', '_', key)
 
     def _set_data(self, data):
         self._set_list_data(self, data, 'events')
