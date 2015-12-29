@@ -63,6 +63,8 @@ class Request(urllib.request.Request):
             params=self.unicode_urlencode(params),
         )
         urllib.request.Request.__init__(self, url)
+        print params
+        print url
 
         self.lifetime = lifetime_exp
 
@@ -97,7 +99,7 @@ class Request(urllib.request.Request):
             and then taking the MD5 hex digest.
         """
         for arg in args:
-            if isinstance(arg, list):
+            if isinstance(args[arg], list):
                 args[arg] = json.dumps(args[arg])
 
         args_joined = ''
@@ -105,11 +107,19 @@ class Request(urllib.request.Request):
         for arg in sorted(args.keys()):
             if not isinstance(arg, six.text_type)\
                and isinstance(arg, six.string_types):
-                arg = six.u(arg).encode("utf-8")
+                args_joined += six.u(arg).encode("utf-8")
             else:
-                arg = str(arg)
+                args_joined += str(arg)
 
-            args_joined += "{0}=".format(arg)
+            args_joined += "="
+
+            if not isinstance(args[arg], six.text_type)\
+               and isinstance(args[arg], six.string_types):
+                args_joined += six.u(args[arg]).encode("utf-8")
+            else:
+                args_joined += str(args[arg])
+
+        print args_joined
 
         md5_hash = hashlib.md5(args_joined)
         md5_hash.update(self.api_secret)

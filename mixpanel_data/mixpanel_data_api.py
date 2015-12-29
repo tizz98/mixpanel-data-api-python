@@ -34,6 +34,8 @@ class Export(object):
         self.where = where
         self.bucket = bucket
 
+        self._populate()
+
     @staticmethod
     def _set_list_data(obj, data_list, key):
         for data_item in data_list:
@@ -81,7 +83,22 @@ class Export(object):
         self._set_list_data(self, data, 'events')
 
     def _populate(self):
+        params = {
+            'from_date': self.from_date,
+            'to_date': self.to_date,
+            'event': self.event,
+        }
+
+        if self.where:
+            params['where'] = self.where
+        if self.bucket:
+            params['bucket'] = self.bucket
+
         response = Request('export', subdomain='data',
-                           json_decoder=jsonl_decoder)
+                           json_decoder=jsonl_decoder, **params)
         data = response.json()
-        self._set_data(data)
+
+        if 'error' not in data:
+            self._set_data(data)
+        else:
+            self.events = []
