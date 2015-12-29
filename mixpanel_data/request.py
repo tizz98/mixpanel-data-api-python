@@ -65,8 +65,6 @@ class Request(urllib.request.Request):
             params=self.unicode_urlencode(params),
         )
         urllib.request.Request.__init__(self, url)
-        print params
-        print url
 
         self.lifetime = lifetime_exp
 
@@ -120,8 +118,6 @@ class Request(urllib.request.Request):
                 args_joined += six.u(args[arg]).encode("utf-8")
             else:
                 args_joined += str(args[arg])
-
-        print args_joined
 
         md5_hash = hashlib.md5(args_joined)
         md5_hash.update(self.api_secret)
